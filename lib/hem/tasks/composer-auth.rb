@@ -6,5 +6,5 @@ namespace :deps do
 end
 
 def php_command(args)
-  "#{args}"
+  args.to_s
 end

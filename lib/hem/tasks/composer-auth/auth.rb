@@ -4,7 +4,7 @@
 namespace :auth do
   namespace :composer do
     desc 'Ask for a composer authentication token for fetching private repositories inside the VM'
-    task :config, [:domain, :token] do |task_name, args|
+    task :config, [:domain, :token] do |_task_name, args|
       domain = args[:domain] || 'github-oauth.github.com'
       Hem.ui.section 'Composer Configuration' do
         has_auth_exitcode = run "grep -q '#{domain}' ~/.composer/auth.json",

@@ -1,5 +1,7 @@
-# coding: utf-8
-lib = File.expand_path('../lib', __FILE__)
+#!/usr/bin/env ruby
+# ^ Syntax hint
+
+lib = File.expand_path('lib', __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 require 'hem/tasks/composer-auth/version'
