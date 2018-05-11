@@ -2,39 +2,48 @@
 # ^ Syntax hint
 
 namespace :auth do
-  desc 'Ask for a git oauth token for fetching private repositories inside the VM'
-  task :composer_github do
-    Hem.ui.section 'Composer Configuration' do
-      has_auth_exitcode = run 'grep -q github.com /home/vagrant/.composer/auth.json',
-                              ignore_errors: true, exit_status: true
-      has_auth = has_auth_exitcode.zero?
-      if has_auth
-        Hem.ui.success 'Detected that oauth token present in /home/vagrant/.composer/auth.json already!'
-      else
-        oauth_token = Hem.ui.ask(
-          'Github OAuth Token [This can be generated at https://github.com/settings/tokens ]',
-          default: ''
-        ).to_s
-        run "php bin/composer.phar config --global github-oauth.github.com '#{oauth_token}'" unless oauth_token.empty?
-        if !oauth_token.empty?
-          Hem.ui.info 'Skipped oauth token as none provided'
+  namespace :composer do
+    desc 'Ask for a composer authentication token for fetching private repositories inside the VM'
+    task :config, [:domain, :token] do |task_name, args|
+      domain = args[:domain] || 'github-oauth.github.com'
+      Hem.ui.section 'Composer Configuration' do
+        has_auth_exitcode = run "grep -q '#{domain}' ~/.composer/auth.json",
+                                ignore_errors: true, exit_status: true
+        has_auth = has_auth_exitcode.zero?
+        if has_auth
+          Hem.ui.success 'Detected that domain present in ~/.composer/auth.json already!'
         else
-          Hem.ui.success 'Set oauth token in /home/vagrant/.composer/auth.json'
+          question = 'Github OAuth Token [This can be generated at https://github.com/settings/tokens ]'
+          if domain =~ 'github'
+            question ||= 'Authentication Token for ' + domain
+            token = Hem.ui.ask(question, default: args[:token]).to_s
+            run php_command("php bin/composer.phar config --global '#{domain}' '#{token}'") unless token.empty?
+            if !token.empty?
+              Hem.ui.info 'Skipped composer config as no token provided'
+            else
+              Hem.ui.success 'Set composer config token in ~/.composer/auth.json'
+            end
+          end
         end
       end
     end
-  end
-end
 
-namespace :deps do
-  task :composer_auth do
-    if ENV['COMPOSER_AUTH']
-      require 'shellwords'
-      escaped_composer_auth = ENV['COMPOSER_AUTH'].gsub('"', '\"')
-      Hem.ui.section 'Setting up Composer Authentication in ~/.composer/auth.json' do
-        run "mkdir -p ~/.composer/", realtime: true, indent: 2
-        run "echo '#{escaped_composer_auth}' > ~/.composer/auth.json", realtime: true, indent: 2
-        Hem.ui.success 'Done'
+    desc 'Ask for a composer auth file as JSON, or pick from COMPOSER_AUTH in the environment, '\
+         'for fetching private repositories inside the VM'
+    task :file do
+      Hem.ui.section 'Composer Configuration' do
+        auth = ''
+        auth = ENV['COMPOSER_AUTH'] if ENV['COMPOSER_AUTH']
+        auth = Hem.ui.ask('Composer Auth JSON', default: auth).to_s
+        if auth
+          require 'shellwords'
+          escaped_composer_auth = auth.gsub('"', '\"')
+          Hem.ui.section 'Setting up Composer Authentication in ~/.composer/auth.json' do
+            run 'mkdir -p ~/.composer/', realtime: true, indent: 2
+            run "echo '#{escaped_composer_auth}' > ~/.composer/auth.json", realtime: true, indent: 2
+            Hem.ui.success 'Done'
+          end
+        end
       end
     end
   end

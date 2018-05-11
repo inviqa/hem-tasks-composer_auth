@@ -4,12 +4,21 @@ Contains tasks for [Hem](https://github.com/inviqa/hem) to set up authentication
 
 ## Installation
 
-Add this line to your application's Hemfile:
+Add these lines to your application's Hemfile:
 
 ```ruby
 plugins do
   gem 'hem-tasks-composer-auth', '~> 1.0.0'
 end
+```
+
+then either:
+```ruby
+after 'tools:composer', 'deps:auth:composer:file'
+```
+or:
+```ruby
+after 'tools:composer', 'deps:auth:composer:config'
 ```
 
 ## Usage
