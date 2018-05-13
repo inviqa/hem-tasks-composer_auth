@@ -1,7 +1,9 @@
 #!/usr/bin/env ruby
 # ^ Syntax hint
 
+desc 'Authentication for dependencies'
 namespace :auth do
+  desc 'Authentication for composer dependencies'
   namespace :composer do
     desc 'Ask for a composer authentication token for fetching private repositories inside the VM'
     task :config, [:domain, :username, :token] do |_task_name, args|

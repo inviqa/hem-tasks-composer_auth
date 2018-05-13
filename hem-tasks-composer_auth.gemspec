@@ -4,10 +4,10 @@
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
-require 'hem/tasks/composer-auth/version'
+require 'hem/tasks/composer_auth/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = 'hem-tasks-composer-auth'
+  spec.name          = 'hem-tasks-composer_auth'
   spec.version       = Hem::Tasks::ComposerAuth::VERSION
   spec.authors       = ['Kieren Evans']
   spec.email         = ['kevans+hem_tasks@inviqa.com']
