@@ -16,7 +16,7 @@ namespace :auth do
                                 ignore_errors: true, exit_status: true
         has_auth = has_auth_exitcode.zero?
         if has_auth
-          Hem.ui.success 'Detected that domain present in ~/.composer/auth.json already!'
+          Hem.ui.success 'Detected that domain present in ~/.composer/auth.json already, skipping'
         else
           username = Hem.ui.ask('Username for ' + domain, default: args[:username]).to_s unless domain =~ /github/
 
