@@ -30,9 +30,9 @@ namespace :auth do
           end
 
           if !token.empty?
-            Hem.ui.info 'Skipped composer config as no token provided'
-          else
             Hem.ui.success 'Set composer config token in ~/.composer/auth.json'
+          else
+            Hem.ui.info 'Skipped composer config as no token provided'
           end
         end
       end
