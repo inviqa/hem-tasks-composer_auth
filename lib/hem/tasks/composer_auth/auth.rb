@@ -9,7 +9,10 @@ namespace :auth do
     task :config, [:domain, :username, :token] do |_task_name, args|
       domain = args[:domain] || 'github-oauth.github.com'
       Hem.ui.section 'Composer Configuration' do
-        has_auth_exitcode = run "grep -q '#{domain}' ~/.composer/auth.json",
+        # strip first subdomain off for checking in auth.json as composer puts the first part as a top level key
+        # for example "http-basic" from "http-basic.example.com"
+        auth_domain = domain.sub(/^[^\.]+\./, '')
+        has_auth_exitcode = run "grep -q '#{auth_domain}' ~/.composer/auth.json",
                                 ignore_errors: true, exit_status: true
         has_auth = has_auth_exitcode.zero?
         if has_auth

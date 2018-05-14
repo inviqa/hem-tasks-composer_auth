@@ -8,7 +8,7 @@ Add these lines to your application's Hemfile:
 
 ```ruby
 plugins do
-  gem 'hem-tasks-composer-auth', '~> 1.0.0'
+  gem 'hem-tasks-composer_auth', '~> 1.0.0'
 end
 ```
 
@@ -26,7 +26,7 @@ after 'tools:composer', 'deps:auth:composer:config'
 Run the following to see usage:
 
 ```bash
-hem deps auth
+hem deps auth composer
 ```
 
 ## Development
