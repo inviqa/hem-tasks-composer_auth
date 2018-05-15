@@ -18,6 +18,7 @@ namespace :auth do
         if has_auth
           Hem.ui.success 'Detected that domain present in ~/.composer/auth.json already, skipping'
         else
+          username = ''
           username = Hem.ui.ask('Username for ' + domain, default: args[:username]).to_s unless domain =~ /github/
 
           question = 'Authentication Token for ' + domain
